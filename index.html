@@ -204,6 +204,7 @@
     border-bottom: 1px solid var(--line);
   }
   .thumb svg.art { width: 100%; height: 100%; display: block; }
+  .thumb img.art { width: 100%; height: 100%; display: block; object-fit: cover; }
   .tag {
     position: absolute; top: 12px; left: 12px; font-family: var(--font-body); font-size: 10.5px; font-weight: 600;
     padding: 4px 10px; border-radius: 2px; letter-spacing: 1px; text-transform: uppercase;
@@ -494,14 +495,14 @@
   }
 
   const PRODUCTS = [
-    { id:'EX-01', name:'ท่อไอเสียไทเทเนียม ฟูลซิสเต็ม', cat:'ท่อ & ไอเสีย', fit:'Continental GT / 911 / AMG GT', price:89000, old:98000, glyph:'exhaust', tag:'ไฮไลต์', stock:true },
-    { id:'EN-01', name:'เทอร์โบบิลเลต สเปกแข่งขัน', cat:'เทอร์โบ & จูน', fit:'BMW M / Audi RS', price:145000, glyph:'turbo', tag:'ขายดี', stock:true },
-    { id:'EN-02', name:'จูนกล่อง ECU เฉพาะคัน (Stage 2)', cat:'เทอร์โบ & จูน', fit:'รถยุโรปเทอร์โบ', price:65000, glyph:'turbo', stock:true },
-    { id:'BR-01', name:'ชุดเบรกใหญ่ 6 พอต ดิสก์เจาะรู', cat:'เบรก', fit:'Porsche / Range Rover', price:78000, glyph:'brake', tag:'ไฮไลต์', stock:true },
-    { id:'SU-01', name:'แอร์ซัสเพนชัน ปรับไฟฟ้า', cat:'ช่วงล่าง', fit:'รถหรู / SUV ไฮเอนด์', price:120000, glyph:'coil', stock:true },
-    { id:'SU-02', name:'โช้คอัพปรับเกลียว เกรดสนาม', cat:'ช่วงล่าง', fit:'คูเป้สมรรถนะสูง', price:58000, glyph:'coil', stock:true },
-    { id:'WH-01', name:'ล้อแม็กฟอร์จ 21" โมโนบล็อก (ชุด 4)', cat:'ล้อ & ยาง', fit:'ตามรุ่น (สั่งทำ)', price:180000, old:210000, glyph:'wheel', tag:'ลดราคา', stock:true },
-    { id:'WH-02', name:'ยางสมรรถนะสูง 265/35 R21', cat:'ล้อ & ยาง', fit:'ขอบ 21"', price:12500, glyph:'wheel', stock:true },
+    { id:'EX-01', name:'ท่อไอเสียไทเทเนียม ฟูลซิสเต็ม', cat:'ท่อ & ไอเสีย', fit:'Continental GT / 911 / AMG GT', price:89000, old:98000, glyph:'exhaust', img:'exhaust.jpg', tag:'ไฮไลต์', stock:true },
+    { id:'EN-01', name:'เทอร์โบบิลเลต สเปกแข่งขัน', cat:'เทอร์โบ & จูน', fit:'BMW M / Audi RS', price:145000, glyph:'turbo', img:'turbo.jpg', tag:'ขายดี', stock:true },
+    { id:'EN-02', name:'จูนกล่อง ECU เฉพาะคัน (Stage 2)', cat:'เทอร์โบ & จูน', fit:'รถยุโรปเทอร์โบ', price:65000, glyph:'turbo', img:'ecu.jpg', stock:true },
+    { id:'BR-01', name:'ชุดเบรกใหญ่ 6 พอต ดิสก์เจาะรู', cat:'เบรก', fit:'Porsche / Range Rover', price:78000, glyph:'brake', img:'brake.jpg', tag:'ไฮไลต์', stock:true },
+    { id:'SU-01', name:'แอร์ซัสเพนชัน ปรับไฟฟ้า', cat:'ช่วงล่าง', fit:'รถหรู / SUV ไฮเอนด์', price:120000, glyph:'coil', img:'airsus.jpg', stock:true },
+    { id:'SU-02', name:'โช้คอัพปรับเกลียว เกรดสนาม', cat:'ช่วงล่าง', fit:'คูเป้สมรรถนะสูง', price:58000, glyph:'coil', img:'coilover.jpg', stock:true },
+    { id:'WH-01', name:'ล้อแม็กฟอร์จ 21" โมโนบล็อก (ชุด 4)', cat:'ล้อ & ยาง', fit:'ตามรุ่น (สั่งทำ)', price:180000, old:210000, glyph:'wheel', img:'wheels.jpg', tag:'ลดราคา', stock:true },
+    { id:'WH-02', name:'ยางสมรรถนะสูง 265/35 R21', cat:'ล้อ & ยาง', fit:'ขอบ 21"', price:12500, glyph:'wheel', img:'tire.jpg', stock:true },
     { id:'CB-01', name:'ชุดบอดี้คิตคาร์บอนแท้ รอบคัน', cat:'บอดี้คิต', fit:'ตามรุ่น (สั่งทำ)', price:165000, glyph:'carbon', tag:'สั่งทำ', stock:true },
     { id:'CB-02', name:'ฝากระโปรงคาร์บอน น้ำหนักเบา', cat:'คาร์บอน', fit:'คูเป้ / ซีดานสปอร์ต', price:42000, glyph:'carbon', stock:true },
     { id:'CB-03', name:'สปอยเลอร์คาร์บอน ปรับองศาได้', cat:'คาร์บอน', fit:'ยูนิเวอร์แซล', price:35000, glyph:'kit', stock:true },
@@ -551,7 +552,7 @@
     list.forEach(p => {
       const card = document.createElement('div'); card.className = 'card';
       card.innerHTML =
-        '<div class="thumb">' + thumbArt(p) +
+        '<div class="thumb">' + (p.img ? '<img class="art" src="' + p.img + '" alt="' + p.name + '" loading="lazy">' : thumbArt(p)) +
           (p.tag ? '<span class="tag">' + p.tag + '</span>' : '') +
           (!p.stock ? '<span class="tag oos">ติดต่อสั่งจอง</span>' : '') +
         '</div>' +
@@ -678,6 +679,7 @@
 
   // ---------- Hero slider ----------
   const SLIDES = [
+    { img:'promo.jpg', act:'top' },
     { eyebrow:'Prestige Collection', title:'งานแต่งระดับ<em>ไฮคลาส</em><br>สำหรับคนที่ไม่ประนีประนอม', text:'คัดอะไหล่และของแต่งคุณภาพสูงสุดสำหรับรถหรูและซูเปอร์คาร์ ของแท้ มีใบรับประกัน พร้อมทีมที่ปรึกษาส่วนตัว', cta:'ชมสินค้าแนะนำ', act:'top', g:'radial-gradient(130% 150% at 85% 10%, rgba(201,162,75,.22), transparent 55%)' },
     { eyebrow:'Performance', title:'เทอร์โบ · ท่อไทเทเนียม<br><em>พลังที่ควบคุมได้</em>', text:'ชุดอัพเกรดสมรรถนะพร้อมจูนเฉพาะคันโดยผู้เชี่ยวชาญ รีดศักยภาพเครื่องยนต์อย่างปลอดภัย', cta:'ดูหมวดเครื่องยนต์', act:'cat', g:'radial-gradient(130% 150% at 15% 20%, rgba(231,205,140,.18), transparent 55%)' },
     { eyebrow:'Forged & Carbon', title:'ล้อฟอร์จ · คาร์บอนแท้<br><em>งานสั่งทำเฉพาะคัน</em>', text:'ล้อโมโนบล็อกและชุดบอดี้คิตคาร์บอน ออกแบบและผลิตตามสเปกของคุณ ลดน้ำหนัก เพิ่มความงาม', cta:'ดูคอลเลกชัน', act:'top', g:'radial-gradient(130% 150% at 80% 80%, rgba(201,162,75,.2), transparent 55%)' }
@@ -693,7 +695,11 @@
 
   function buildSlides() {
     slidesEl.innerHTML = SLIDES.map(s =>
-      '<div class="slide">' +
+      s.img
+      ? '<div class="slide slide-promo" data-act="' + (s.act || 'top') + '">' +
+          '<div class="bgfx" style="background-image:url(\'' + s.img + '\');background-size:cover;background-position:center;pointer-events:none"></div>' +
+        '</div>'
+      : '<div class="slide">' +
         '<div class="bgfx" style="background:' + s.g + ',' + texture + '"></div>' +
         '<div class="hero-copy">' +
           '<span class="eyebrow">' + s.eyebrow + '</span>' +
@@ -703,6 +709,7 @@
         '</div>' +
       '</div>'
     ).join('');
+    slidesEl.querySelectorAll('.slide-promo').forEach(el => { el.style.cursor = 'pointer'; el.onclick = () => heroAct(el.dataset.act); });
     dotsEl.innerHTML = SLIDES.map((s, i) => '<button data-i="' + i + '" aria-label="สไลด์ ' + (i + 1) + '"></button>').join('');
     slidesEl.querySelectorAll('.hero-cta').forEach(b => b.onclick = () => heroAct(b.dataset.act));
     dotsEl.querySelectorAll('button').forEach(b => b.onclick = () => goSlide(+b.dataset.i));
