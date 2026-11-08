@@ -298,6 +298,8 @@
   .vcard:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow); }
   .vthumb { position: relative; aspect-ratio: 9 / 16; display: grid; place-items: center; overflow: hidden; }
   .vthumb svg.cover { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .vthumb img.cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .vthumb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,7,6,.1), rgba(8,7,6,.55)); z-index: 1; }
   .vthumb .play { position: relative; z-index: 2; width: 54px; height: 54px; border-radius: 50%; background: rgba(8,7,6,.4); display: grid; place-items: center; border: 1px solid var(--accent-2); }
   .vthumb .play svg { width: 22px; height: 22px; color: var(--accent-2); margin-left: 3px; }
   .vchip { position: absolute; z-index: 2; top: 12px; left: 12px; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--accent-ink); background: var(--accent); padding: 3px 8px; border-radius: 2px; }
@@ -656,20 +658,22 @@
 
   // ---------- Feed ----------
   const VIDEOS = [
-    { cap: 'ซูเปอร์คาร์ฟูลสเปก', tag: '#ไฮคลาส #ซูเปอร์คาร์', q: 'ซูเปอร์คาร์ แต่ง', g1:'#241f14', g2:'#0c0b0a' },
-    { cap: 'ท่อไทเทเนียม เสียงพรีเมียม', tag: '#ท่อไทเทเนียม', q: 'ท่อไทเทเนียม', g1:'#2a2314', g2:'#0c0b0a' },
-    { cap: 'ล้อฟอร์จ งานสั่งทำ', tag: '#ล้อฟอร์จ', q: 'ล้อฟอร์จ', g1:'#201c15', g2:'#0c0b0a' },
-    { cap: 'บอดี้คิตคาร์บอนแท้', tag: '#คาร์บอน #บอดี้คิต', q: 'บอดี้คิต คาร์บอน', g1:'#26200f', g2:'#0c0b0a' }
+    { cap: 'ท่อไทเทเนียม เสียงพรีเมียม', tag: '#ท่อไทเทเนียม', q: 'ท่อไทเทเนียม', img:'exhaust.jpg', g1:'#2a2314', g2:'#0c0b0a' },
+    { cap: 'ล้อฟอร์จ 21" งานสั่งทำ', tag: '#ล้อฟอร์จ', q: 'ล้อฟอร์จ', img:'wheels.jpg', g1:'#201c15', g2:'#0c0b0a' },
+    { cap: 'เบรก 6 พอต สเปกสนาม', tag: '#เบรกใหญ่ #6พอต', q: 'เบรก 6 พอต', img:'brake.jpg', g1:'#241f14', g2:'#0c0b0a' },
+    { cap: 'เทอร์โบบิลเลต สเปกแข่ง', tag: '#เทอร์โบ #จูน', q: 'เทอร์โบ แต่ง', img:'turbo.jpg', g1:'#26200f', g2:'#0c0b0a' }
   ];
   document.getElementById('feedGrid').innerHTML = VIDEOS.map(v =>
     '<a class="vcard" href="https://www.tiktok.com/search?q=' + encodeURIComponent(v.q) + '" target="_blank" rel="noopener">' +
       '<div class="vthumb">' +
-        '<svg class="cover" viewBox="0 0 90 160" preserveAspectRatio="xMidYMid slice">' +
+        (v.img
+          ? '<img class="cover" src="' + v.img + '" alt="' + v.cap + '" loading="lazy">'
+          : '<svg class="cover" viewBox="0 0 90 160" preserveAspectRatio="xMidYMid slice">' +
           '<defs><linearGradient id="vg' + v.q.length + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + v.g1 + '"/><stop offset="1" stop-color="' + v.g2 + '"/></linearGradient></defs>' +
           '<rect width="90" height="160" fill="url(#vg' + v.q.length + ')"/>' +
           '<path d="M-5 120 Q45 90 95 120" fill="none" stroke="#c9a24b" stroke-width="1.5" opacity=".5"/>' +
           '<path d="M-5 135 Q45 108 95 135" fill="none" stroke="#e7cd8c" stroke-width="1" opacity=".3"/>' +
-        '</svg>' +
+        '</svg>') +
         '<span class="vchip">ตัวอย่าง</span>' +
         '<span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>' +
       '</div>' +
