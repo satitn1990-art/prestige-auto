@@ -1,0 +1,755 @@
+<title>Prestige Auto</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  /* Layout: luxury black-and-gold storefront — promo bar + sticky header, category rail,
+     cinematic hero slider, 4×2 featured grid, slide-in cart, video feed, rich footer.
+     Dark-first: deep obsidian ground, brushed-gold accent, refined serif display. */
+  :root {
+    --bg: #0c0b0a;
+    --surface: #15130f;
+    --surface-2: #1e1b15;
+    --fg: #ece7db;
+    --muted: #9a9183;
+    --line: #2c271e;
+    --accent: #c9a24b;        /* brushed gold */
+    --accent-2: #e7cd8c;      /* light champagne */
+    --accent-ink: #171206;
+    --ok: #4fae7a;
+    --carbon: #080706;
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 18px 46px rgba(0,0,0,.55);
+    --font-display: "Noto Serif Thai", "Cormorant Garamond", Georgia, serif;
+    --font-body: "Sarabun", system-ui, sans-serif;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #f4f1e9;
+      --surface: #ffffff;
+      --surface-2: #ece6d8;
+      --fg: #1b1813;
+      --muted: #6c6556;
+      --line: #ddd5c4;
+      --accent: #9c7a2e;
+      --accent-2: #b9953f;
+      --accent-ink: #ffffff;
+      --ok: #2f9160;
+      --carbon: #141009;
+      --shadow: 0 1px 2px rgba(20,16,9,.06), 0 16px 40px rgba(20,16,9,.12);
+      color-scheme: light;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f4f1e9;
+    --surface: #ffffff;
+    --surface-2: #ece6d8;
+    --fg: #1b1813;
+    --muted: #6c6556;
+    --line: #ddd5c4;
+    --accent: #9c7a2e;
+    --accent-2: #b9953f;
+    --accent-ink: #ffffff;
+    --ok: #2f9160;
+    --carbon: #141009;
+    --shadow: 0 1px 2px rgba(20,16,9,.06), 0 16px 40px rgba(20,16,9,.12);
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font-family: var(--font-body); line-height: 1.55; font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .display { font-family: var(--font-display); font-weight: 600; text-wrap: balance; }
+  .tnum { font-variant-numeric: tabular-nums; }
+
+  body::before {
+    content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+    background: var(--carbon); z-index: 40;
+  }
+
+  .promo-bar {
+    background: var(--carbon); color: var(--accent-2); text-align: center;
+    font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 8px max(16px, env(safe-area-inset-left, 0px));
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* ---------- Header ---------- */
+  header.site {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30;
+    background: var(--carbon); color: #ece7db; border-bottom: 1px solid var(--accent);
+  }
+  .bar {
+    max-width: 1200px; margin: 0 auto; padding-block: 14px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; margin-right: auto; }
+  .crest {
+    width: 42px; height: 42px; border-radius: 50%; flex: none;
+    border: 1px solid var(--accent); color: var(--accent);
+    display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 20px;
+    background: radial-gradient(circle at 50% 30%, rgba(201,162,75,.18), transparent 70%);
+  }
+  .brand b { font-family: var(--font-display); font-weight: 600; font-size: 22px; letter-spacing: 2px; color: #f3eee2; text-transform: uppercase; }
+  .brand small { display: block; color: var(--accent-2); font-size: 10.5px; letter-spacing: 3px; margin-top: -2px; text-transform: uppercase; }
+
+  .search { position: relative; flex: 1 1 260px; min-width: 0; }
+  .search input {
+    width: 100%; padding: 11px 14px 11px 40px; border-radius: 2px;
+    border: 1px solid #39342a; background: #110f0b; color: #ece7db;
+    font-family: var(--font-body); font-size: 14px;
+  }
+  .search input::placeholder { color: #7d7566; }
+  .search input:focus { outline: none; border-color: var(--accent); }
+  .search svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: #7d7566; }
+
+  .icon-btn {
+    position: relative; flex: none; width: 44px; height: 44px; border-radius: 2px;
+    border: 1px solid #39342a; background: #110f0b; color: #ece7db;
+    display: grid; place-items: center; cursor: pointer;
+  }
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent-2); }
+  .cart-count {
+    position: absolute; top: -7px; right: -7px; min-width: 19px; height: 19px; padding: 0 5px;
+    border-radius: 10px; background: var(--accent); color: var(--accent-ink);
+    font-size: 11px; font-weight: 700; display: grid; place-items: center;
+  }
+  .cart-count[hidden] { display: none; }
+
+  nav.cats {
+    background: var(--surface); border-bottom: 1px solid var(--line);
+    position: sticky; top: calc(env(safe-area-inset-top, 0px) + 71px); z-index: 25;
+  }
+  .cats-in {
+    max-width: 1200px; margin: 0 auto; padding-block: 12px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: flex; gap: 10px; overflow-x: auto; scrollbar-width: thin;
+  }
+  .chip {
+    flex: none; padding: 8px 18px; border-radius: 2px; cursor: pointer;
+    border: 1px solid var(--line); background: transparent; color: var(--fg);
+    font-family: var(--font-body); font-weight: 500; font-size: 13.5px; white-space: nowrap;
+    letter-spacing: .3px;
+  }
+  .chip:hover { border-color: var(--accent); }
+  .chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+  /* ---------- Hero slider ---------- */
+  .hero {
+    max-width: 1200px; margin: 20px auto 0;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .hero-slider { position: relative; overflow: hidden; border: 1px solid var(--line); background: var(--carbon); aspect-ratio: 21 / 9; min-height: 320px; }
+  .slides { display: flex; height: 100%; transition: transform .7s cubic-bezier(.4,0,.2,1); }
+  .slide {
+    position: relative; min-width: 100%; height: 100%; display: flex; align-items: center;
+    padding: 46px 48px; color: #f1ece0;
+    background: var(--carbon);
+  }
+  .slide .bgfx { position: absolute; inset: 0; pointer-events: none; }
+  .slide .hero-copy { position: relative; z-index: 2; max-width: 52ch; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-body); font-weight: 600; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent-2); margin-bottom: 14px; }
+  .eyebrow::before { content: ""; width: 34px; height: 1px; background: var(--accent); }
+  .slide h1 { margin: 0; font-size: clamp(28px, 5vw, 48px); font-weight: 600; line-height: 1.08; letter-spacing: .5px; }
+  .slide h1 em { color: var(--accent-2); font-style: italic; }
+  .slide p { margin: 14px 0 0; color: #cfc8ba; font-size: 15.5px; max-width: 46ch; }
+  .hero-cta { margin-top: 26px; display: inline-flex; align-items: center; gap: 10px; padding: 13px 30px; border-radius: 2px; background: var(--accent); color: var(--accent-ink); border: none; cursor: pointer; font-family: var(--font-body); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; }
+  .hero-cta:hover { background: var(--accent-2); }
+  .hero-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(201,162,75,.5); background: rgba(8,7,6,.5); color: var(--accent-2); font-size: 20px; line-height: 1; cursor: pointer; display: grid; place-items: center; z-index: 3; }
+  .hero-nav:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .hero-nav.prev { left: 16px; } .hero-nav.next { right: 16px; }
+  .hero-dots { position: absolute; left: 0; right: 0; bottom: 18px; display: flex; justify-content: center; gap: 9px; z-index: 3; }
+  .hero-dots button { width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--accent-2); background: transparent; cursor: pointer; padding: 0; transition: width .25s, background .25s; }
+  .hero-dots button[aria-current="true"] { background: var(--accent); width: 26px; border-radius: 4px; border-color: var(--accent); }
+  .hero-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(201,162,75,.2); z-index: 3; }
+  .hero-progress span { display: block; height: 100%; width: 0; background: var(--accent); }
+  @media (max-width: 560px) { .hero-nav { display: none; } .slide { padding: 30px 24px; } }
+
+  /* ---------- Section head ---------- */
+  main {
+    max-width: 1200px; margin: 0 auto; padding-block: 24px 48px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .sec-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 14px 2px 20px; flex-wrap: wrap; }
+  .sec-title { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+  .sec-head h2 { margin: 0; font-size: 24px; letter-spacing: .5px; position: relative; padding-left: 16px; }
+  .sec-head h2::before { content: ""; position: absolute; left: 0; top: 4px; bottom: 4px; width: 3px; background: var(--accent); }
+  .sec-title span { color: var(--muted); font-size: 13px; letter-spacing: .5px; }
+  .sec-ctrl { display: none; align-items: center; gap: 14px; }
+  .sec-head.is-featured .sec-ctrl { display: flex; }
+  .see-all { background: none; border: none; color: var(--accent); font-family: var(--font-body); font-weight: 600; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; padding: 4px 2px; }
+  .see-all:hover { color: var(--accent-2); }
+
+  /* ---------- Product grid ---------- */
+  .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+  .grid.feat { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 860px) { .grid.feat { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 600px) { .grid.feat { grid-template-columns: repeat(2, 1fr); } }
+  :root[data-device="mobile"] .grid.feat { grid-template-columns: repeat(2, 1fr); }
+  :root[data-device="mobile"] .grid { grid-template-columns: repeat(2, 1fr); }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 2px;
+    overflow: hidden; display: flex; flex-direction: column; transition: border-color .18s, transform .18s, box-shadow .18s;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow); }
+  .thumb {
+    aspect-ratio: 4 / 3; max-width: 100%; position: relative;
+    border-bottom: 1px solid var(--line);
+  }
+  .thumb svg.art { width: 100%; height: 100%; display: block; }
+  .tag {
+    position: absolute; top: 12px; left: 12px; font-family: var(--font-body); font-size: 10.5px; font-weight: 600;
+    padding: 4px 10px; border-radius: 2px; letter-spacing: 1px; text-transform: uppercase;
+    background: var(--accent); color: var(--accent-ink);
+  }
+  .tag.oos { background: var(--muted); color: #fff; }
+  .card-body { padding: 14px 15px 16px; display: flex; flex-direction: column; gap: 5px; flex: 1; }
+  .cat-label { font-family: var(--font-body); font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .p-name { font-family: var(--font-display); font-size: 16px; font-weight: 600; min-width: 0; line-height: 1.3; }
+  .fitment { font-size: 11.5px; color: var(--muted); }
+  .price-row { margin-top: auto; display: flex; align-items: baseline; gap: 8px; padding-top: 10px; }
+  .price { font-family: var(--font-display); font-weight: 600; font-size: 20px; color: var(--fg); }
+  .price.sale { color: var(--accent); }
+  .old { color: var(--muted); text-decoration: line-through; font-size: 12.5px; }
+  .add {
+    margin-top: 12px; width: 100%; padding: 11px; border-radius: 2px; cursor: pointer;
+    border: 1px solid var(--accent); background: transparent; color: var(--accent);
+    font-family: var(--font-body); font-weight: 600; font-size: 12.5px; letter-spacing: 1.5px; text-transform: uppercase;
+    transition: background .15s, color .15s;
+  }
+  .add:hover { background: var(--accent); color: var(--accent-ink); }
+  .add.ghost { color: var(--muted); border-color: var(--line); cursor: not-allowed; }
+  .add.ghost:hover { background: transparent; color: var(--muted); }
+  .add.added { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .empty-filter { color: var(--muted); text-align: center; padding: 56px 0; font-family: var(--font-display); font-size: 17px; }
+
+  /* ---------- Cart drawer ---------- */
+  .scrim { position: fixed; inset: 0; background: rgba(5,4,3,.6); z-index: 50; opacity: 0; transition: opacity .2s; }
+  .scrim[hidden] { display: none; }
+  .scrim.show { opacity: 1; }
+  .drawer {
+    position: fixed; top: 0; right: 0; height: 100%; width: min(440px, 100%); z-index: 60;
+    background: var(--surface); border-left: 1px solid var(--accent);
+    transform: translateX(100%); transition: transform .26s ease; display: flex; flex-direction: column;
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .drawer.show { transform: translateX(0); }
+  .drawer > header {
+    display: flex; align-items: center; gap: 10px; padding: 18px 20px; border-bottom: 1px solid var(--line);
+    background: var(--carbon); color: #ece7db;
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+  }
+  .drawer > header h2 { margin: 0; font-size: 20px; letter-spacing: 1px; color: var(--accent-2); }
+  .close { margin-left: auto; width: 36px; height: 36px; border-radius: 2px; border: 1px solid #39342a;
+    background: #110f0b; color: #ece7db; cursor: pointer; display: grid; place-items: center; }
+  .items { flex: 1; overflow-y: auto; padding: 12px 20px; padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+  .cart-empty { text-align: center; color: var(--muted); padding: 64px 10px; }
+  .cart-empty svg { width: 48px; height: 48px; opacity: .5; margin-bottom: 12px; color: var(--accent); }
+  .cart-empty div { font-family: var(--font-display); font-size: 17px; }
+  .line-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .li-thumb { width: 54px; height: 54px; border-radius: 2px; background: var(--surface-2); flex: none; overflow: hidden; }
+  .li-thumb svg { width: 100%; height: 100%; }
+  .li-main { flex: 1; min-width: 0; }
+  .li-name { font-family: var(--font-display); font-size: 14.5px; font-weight: 600; }
+  .li-sku { font-size: 11px; color: var(--muted); }
+  .qty { display: inline-flex; align-items: center; margin-top: 7px; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; }
+  .qty button { width: 28px; height: 28px; border: none; background: var(--surface-2); color: var(--fg); cursor: pointer; font-size: 16px; }
+  .qty span { min-width: 32px; text-align: center; font-size: 13px; }
+  .li-price { text-align: right; font-family: var(--font-display); font-weight: 600; font-size: 15px; white-space: nowrap; }
+  .li-remove { display: block; margin-top: 7px; font-size: 11px; color: var(--muted); background: none; border: none; cursor: pointer; text-align: right; width: 100%; }
+  .li-remove:hover { color: var(--accent); }
+  .drawer > footer {
+    border-top: 1px solid var(--line); padding: 18px 20px;
+    padding-bottom: max(18px, env(safe-area-inset-bottom, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .totals { display: flex; justify-content: space-between; align-items: baseline; }
+  .totals .t-label { color: var(--muted); font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+  .totals .t-val { font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--accent-2); }
+  .checkout {
+    width: 100%; padding: 15px; border-radius: 2px; border: none; cursor: pointer;
+    background: var(--accent); color: var(--accent-ink); font-family: var(--font-body); font-weight: 600; font-size: 14px;
+    text-transform: uppercase; letter-spacing: 2px;
+  }
+  .checkout:hover { background: var(--accent-2); }
+  .checkout:disabled { opacity: .45; cursor: not-allowed; }
+  .note { font-size: 11.5px; color: var(--muted); text-align: center; }
+
+  /* ---------- Feed ---------- */
+  .feed { max-width: 1200px; margin: 44px auto 0; padding-left: max(16px, env(safe-area-inset-left,0px)); padding-right: max(16px, env(safe-area-inset-right,0px)); }
+  .feed-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+  .feed-head h2 { margin: 0; font-size: 24px; letter-spacing: .5px; position: relative; padding-left: 16px; }
+  .feed-head h2::before { content: ""; position: absolute; left: 0; top: 4px; bottom: 4px; width: 3px; background: var(--accent); }
+  .feed-more { color: var(--accent); font-family: var(--font-body); font-weight: 600; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; }
+  .feed-more:hover { color: var(--accent-2); }
+  .feed-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  @media (max-width: 860px) { .feed-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 600px) { .feed-grid { grid-template-columns: repeat(2, 1fr); } }
+  .vcard { display: block; text-decoration: none; color: inherit; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; background: var(--surface); transition: border-color .18s, transform .18s, box-shadow .18s; }
+  .vcard:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow); }
+  .vthumb { position: relative; aspect-ratio: 9 / 16; display: grid; place-items: center; overflow: hidden; }
+  .vthumb svg.cover { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .vthumb .play { position: relative; z-index: 2; width: 54px; height: 54px; border-radius: 50%; background: rgba(8,7,6,.4); display: grid; place-items: center; border: 1px solid var(--accent-2); }
+  .vthumb .play svg { width: 22px; height: 22px; color: var(--accent-2); margin-left: 3px; }
+  .vchip { position: absolute; z-index: 2; top: 12px; left: 12px; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--accent-ink); background: var(--accent); padding: 3px 8px; border-radius: 2px; }
+  .vbody { padding: 12px 13px 14px; }
+  .vcap { font-family: var(--font-display); font-size: 14px; font-weight: 600; line-height: 1.4; }
+  .vtag { font-size: 11.5px; color: var(--muted); margin-top: 4px; }
+  .feed-note { font-size: 11.5px; color: var(--muted); margin: 14px 2px 0; }
+
+  #toast { position: fixed; left: 50%; bottom: max(26px, env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px);
+    background: var(--accent); color: var(--accent-ink); padding: 11px 20px; border-radius: 2px; font-size: 13px; font-weight: 600; letter-spacing: .5px;
+    opacity: 0; pointer-events: none; transition: all .25s; z-index: 80; box-shadow: var(--shadow); }
+  #toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  footer.site { background: var(--carbon); color: #cfc8ba; border-top: 1px solid var(--accent); margin-top: 20px; }
+  .foot-grid {
+    max-width: 1200px; margin: 0 auto; padding-block: 38px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 34px;
+  }
+  @media (max-width: 720px) { .foot-grid { grid-template-columns: 1fr; gap: 26px; } }
+  .foot-col h4 { margin: 0 0 15px; font-family: var(--font-display); font-size: 15px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--accent-2); }
+  .foot-brand .fb-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .foot-brand .fb-top b { font-family: var(--font-display); font-size: 22px; letter-spacing: 2px; text-transform: uppercase; color: #f3eee2; }
+  .foot-brand p { margin: 0 0 8px; font-size: 13px; color: #a79f90; line-height: 1.7; max-width: 44ch; }
+  .foot-addr { font-size: 12.5px; color: #8a8273; }
+  .foot-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+  .foot-links li { font-size: 13px; color: #c3bbad; }
+  .fl-label { display: inline-block; width: 46px; color: #8a8273; font-size: 12px; }
+  .fl-val { color: #ece7db; cursor: pointer; border-bottom: 1px dashed #4a4336; }
+  .fl-val:hover { color: var(--accent-2); border-color: var(--accent); }
+  .foot-hint { margin: 13px 0 0; font-size: 11px; color: #7d7566; }
+  .foot-bottom { border-top: 1px solid var(--line); }
+  .foot-bar {
+    max-width: 1200px; margin: 0 auto; padding-block: 16px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+    font-size: 12px; color: #8a8273; letter-spacing: .5px;
+  }
+  .to-top { background: #110f0b; border: 1px solid #39342a; color: #c3bbad; border-radius: 2px; padding: 7px 15px; cursor: pointer; font-family: var(--font-body); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+  .to-top:hover { border-color: var(--accent); color: var(--accent-2); }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;600;700&family=Sarabun:wght@400;500;600;700&display=swap">
+
+<div class="promo-bar">จัดส่งพิเศษทั่วประเทศ · รับประกันของแท้ · ที่ปรึกษาส่วนตัวสำหรับทุกคัน</div>
+
+<header class="site">
+  <div class="bar">
+    <div class="brand">
+      <div class="crest">P</div>
+      <div>
+        <b>Prestige Auto</b>
+        <small>อะไหล่แต่งไฮคลาส</small>
+      </div>
+    </div>
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="q" type="search" placeholder="ค้นหา เช่น ท่อไทเทเนียม, ล้อฟอร์จ, คาร์บอน, Continental…" aria-label="ค้นหาสินค้า">
+    </div>
+    <button class="icon-btn" id="themeBtn" title="สลับโหมดสว่าง/มืด" aria-label="สลับธีม">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+    </button>
+    <button class="icon-btn" id="cartBtn" aria-label="เปิดตะกร้า">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+      <span class="cart-count" id="cartCount" hidden>0</span>
+    </button>
+  </div>
+</header>
+<nav class="cats"><div class="cats-in" id="cats"></div></nav>
+
+<section class="hero">
+  <div class="hero-slider" id="heroSlider" aria-label="แบนเนอร์">
+    <div class="slides" id="slides"></div>
+    <button class="hero-nav prev" id="heroPrev" aria-label="สไลด์ก่อนหน้า">‹</button>
+    <button class="hero-nav next" id="heroNext" aria-label="สไลด์ถัดไป">›</button>
+    <div class="hero-dots" id="heroDots"></div>
+    <div class="hero-progress"><span id="heroBar"></span></div>
+  </div>
+</section>
+
+<main>
+  <div class="sec-head" id="secHead">
+    <div class="sec-title"><h2 id="secTitle">สินค้าแนะนำ</h2><span id="countLine"></span></div>
+    <div class="sec-ctrl">
+      <button class="see-all" id="seeAll">ดูทั้งหมด →</button>
+    </div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="empty-filter" id="emptyFilter" hidden>ไม่พบสินค้าที่ตรงกับคำค้นหา</div>
+</main>
+
+<section class="feed">
+  <div class="feed-head">
+    <h2>คอลเลกชันในสนามจริง</h2>
+    <a class="feed-more" href="https://www.tiktok.com/tag/%E0%B8%A3%E0%B8%96%E0%B8%AB%E0%B8%A3%E0%B8%B9" target="_blank" rel="noopener">ดูเพิ่มบน TikTok →</a>
+  </div>
+  <div class="feed-grid" id="feedGrid"></div>
+  <p class="feed-note">* คลิปตัวอย่าง (กดแล้วเปิด TikTok ในแท็บใหม่) — เปลี่ยนเป็นคลิปของร้านได้ภายหลัง</p>
+</section>
+
+<footer class="site">
+  <div class="foot-grid">
+    <div class="foot-col foot-brand">
+      <div class="fb-top"><div class="crest">P</div><b>Prestige Auto</b></div>
+      <p>อะไหล่และของแต่งรถระดับไฮคลาส คัดเฉพาะงานคุณภาพสำหรับรถหรูและซูเปอร์คาร์ ของแท้ มีใบรับประกัน พร้อมทีมที่ปรึกษาและช่างผู้เชี่ยวชาญ</p>
+      <p class="foot-addr">โชว์รูม: (ใส่ที่อยู่ร้าน) · เปิด จันทร์–เสาร์ 10:00–19:00 น. · นัดหมายล่วงหน้าได้</p>
+    </div>
+    <div class="foot-col">
+      <h4>ติดต่อ</h4>
+      <ul class="foot-links">
+        <li><span class="fl-label">โทร</span><span class="fl-val" data-copy>02-000-0000</span></li>
+        <li><span class="fl-label">LINE</span><span class="fl-val" data-copy>@prestigeauto</span></li>
+        <li><span class="fl-label">อีเมล</span><span class="fl-val" data-copy>concierge@prestigeauto.com</span></li>
+      </ul>
+      <p class="foot-hint">แตะที่ข้อมูลเพื่อคัดลอก</p>
+    </div>
+    <div class="foot-col">
+      <h4>ติดตาม</h4>
+      <ul class="foot-links">
+        <li>Facebook — Prestige Auto</li>
+        <li>Instagram — @prestigeauto</li>
+        <li>TikTok — @prestigeauto</li>
+        <li>YouTube — Prestige Auto</li>
+      </ul>
+      <p class="foot-hint">* ใส่ลิงก์โซเชียลจริงภายหลัง</p>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div class="foot-bar">
+      <span>© 2026 Prestige Auto — เว็บตัวอย่าง · ราคาเป็นราคาคร่าวๆ</span>
+      <button class="to-top" id="toTop">กลับขึ้นบน ↑</button>
+    </div>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" aria-label="ตะกร้าสินค้า">
+  <header>
+    <h2>ตะกร้า</h2>
+    <button class="close" id="closeCart" aria-label="ปิด">✕</button>
+  </header>
+  <div class="items" id="items"></div>
+  <footer>
+    <div class="totals">
+      <span class="t-label">ยอดรวม</span>
+      <span class="t-val tnum" id="total">฿0</span>
+    </div>
+    <button class="checkout" id="checkout" disabled>สั่งซื้อผ่าน LINE</button>
+    <div class="note">กดแล้วระบบจะคัดลอกรายการ นำไปวางในแชท LINE ได้เลย</div>
+  </footer>
+</aside>
+
+<div id="toast"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="slotG" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#1b1813"/><stop offset="1" stop-color="#0c0b0a"/>
+  </linearGradient>
+  <linearGradient id="goldG" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#c9a24b"/><stop offset="1" stop-color="#e7cd8c"/>
+  </linearGradient>
+</defs></svg>
+
+<script>
+  const CATS = ["ทั้งหมด", "เครื่องยนต์ & อัพเกรด", "ช่วงล่าง & ล้อฟอร์จ", "คาร์บอน & บอดี้คิต", "ภายใน & ดีเทล"];
+  const GROUP = {
+    'ท่อ & ไอเสีย':'เครื่องยนต์ & อัพเกรด', 'เทอร์โบ & จูน':'เครื่องยนต์ & อัพเกรด', 'เบรก':'เครื่องยนต์ & อัพเกรด',
+    'ช่วงล่าง':'ช่วงล่าง & ล้อฟอร์จ', 'ล้อ & ยาง':'ช่วงล่าง & ล้อฟอร์จ',
+    'คาร์บอน':'คาร์บอน & บอดี้คิต', 'บอดี้คิต':'คาร์บอน & บอดี้คิต',
+    'ภายใน':'ภายใน & ดีเทล', 'ดีเทลลิ่ง':'ภายใน & ดีเทล'
+  };
+
+  // ---------- ช่องรูปสินค้า (image slot หรูหรา — สลับเป็นรูปจริงภายหลัง) ----------
+  const GLYPH = {
+    exhaust: '<path d="M70 95h42a20 20 0 0 1 20 20v4h26v16h-26a20 20 0 0 1-20-20v-4H70z" fill="none" stroke="url(#goldG)" stroke-width="2.5"/><path d="M158 119h8" stroke="url(#goldG)" stroke-width="2.5"/>',
+    turbo: '<circle cx="100" cy="112" r="24" fill="none" stroke="url(#goldG)" stroke-width="2.5"/><circle cx="100" cy="112" r="9" fill="none" stroke="url(#goldG)" stroke-width="2.5"/><path d="M124 100q28-6 30 20q1 16-18 14" fill="none" stroke="url(#goldG)" stroke-width="2.5"/>',
+    brake: '<circle cx="100" cy="112" r="30" fill="none" stroke="url(#goldG)" stroke-width="2.5"/><circle cx="100" cy="112" r="12" fill="none" stroke="url(#goldG)" stroke-width="2.5"/><path d="M70 100h20M70 124h20" stroke="url(#goldG)" stroke-width="2.5"/>',
+    coil: '<path d="M88 78h24M84 92l32 8M84 104l32 8M84 116l32 8M84 128l32 8M88 146h24" stroke="url(#goldG)" stroke-width="2.5" fill="none"/>',
+    wheel: '<circle cx="100" cy="112" r="34" fill="none" stroke="url(#goldG)" stroke-width="2.5"/><circle cx="100" cy="112" r="10" fill="none" stroke="url(#goldG)" stroke-width="2.5"/><g stroke="url(#goldG)" stroke-width="2.5"><path d="M100 78v24M134 112h-24M100 146v-24M66 112h24M118 94l-14 14M118 130l-14-14"/></g>',
+    carbon: '<path d="M70 92h60v40H70z" fill="none" stroke="url(#goldG)" stroke-width="2.5"/><path d="M70 100l20 12-20 12M90 92l20 12-20 12M110 92l20 12-20 12" fill="none" stroke="url(#goldG)" stroke-width="1.5" opacity=".7"/>',
+    kit: '<path d="M64 128l10-26a10 10 0 0 1 9-6h54l8 20v12h-12" fill="none" stroke="url(#goldG)" stroke-width="2.5"/><circle cx="86" cy="132" r="8" fill="none" stroke="url(#goldG)" stroke-width="2.5"/><circle cx="150" cy="132" r="8" fill="none" stroke="url(#goldG)" stroke-width="2.5"/>',
+    seat: '<path d="M86 74q-10 0-10 16v44l44 10v-14l-28-6V92q0-6 8-6h10V74z" fill="none" stroke="url(#goldG)" stroke-width="2.5"/>',
+    light: '<path d="M68 96h64q10 0 10 10v12q0 10-10 10H68z" fill="none" stroke="url(#goldG)" stroke-width="2.5"/><circle cx="96" cy="112" r="11" fill="none" stroke="url(#goldG)" stroke-width="2.5"/><path d="M122 104h12M122 112h12M122 120h12" stroke="url(#goldG)" stroke-width="2"/>',
+    audio: '<circle cx="100" cy="112" r="30" fill="none" stroke="url(#goldG)" stroke-width="2.5"/><circle cx="100" cy="112" r="13" fill="none" stroke="url(#goldG)" stroke-width="2.5"/><circle cx="100" cy="112" r="4" fill="url(#goldG)"/>',
+    detail: '<path d="M96 80l6 14 14 4-10 10 2 16-12-8-14 6 4-16-10-12 16-2z" fill="none" stroke="url(#goldG)" stroke-width="2.5" transform="translate(4 20)"/>'
+  };
+  function thumbArt(p) {
+    return '<svg class="art" viewBox="0 0 200 150" preserveAspectRatio="xMidYMid slice">' +
+      '<rect width="200" height="150" fill="url(#slotG)"/>' +
+      '<rect x="8" y="8" width="184" height="134" fill="none" stroke="#2c271e"/>' +
+      (GLYPH[p.glyph] || GLYPH.detail) +
+      '<text x="100" y="138" text-anchor="middle" font-family="Sarabun, sans-serif" font-size="8" letter-spacing="2" fill="#8a8273">PRESTIGE AUTO</text>' +
+      '</svg>';
+  }
+
+  const PRODUCTS = [
+    { id:'EX-01', name:'ท่อไอเสียไทเทเนียม ฟูลซิสเต็ม', cat:'ท่อ & ไอเสีย', fit:'Continental GT / 911 / AMG GT', price:89000, old:98000, glyph:'exhaust', tag:'ไฮไลต์', stock:true },
+    { id:'EN-01', name:'เทอร์โบบิลเลต สเปกแข่งขัน', cat:'เทอร์โบ & จูน', fit:'BMW M / Audi RS', price:145000, glyph:'turbo', tag:'ขายดี', stock:true },
+    { id:'EN-02', name:'จูนกล่อง ECU เฉพาะคัน (Stage 2)', cat:'เทอร์โบ & จูน', fit:'รถยุโรปเทอร์โบ', price:65000, glyph:'turbo', stock:true },
+    { id:'BR-01', name:'ชุดเบรกใหญ่ 6 พอต ดิสก์เจาะรู', cat:'เบรก', fit:'Porsche / Range Rover', price:78000, glyph:'brake', tag:'ไฮไลต์', stock:true },
+    { id:'SU-01', name:'แอร์ซัสเพนชัน ปรับไฟฟ้า', cat:'ช่วงล่าง', fit:'รถหรู / SUV ไฮเอนด์', price:120000, glyph:'coil', stock:true },
+    { id:'SU-02', name:'โช้คอัพปรับเกลียว เกรดสนาม', cat:'ช่วงล่าง', fit:'คูเป้สมรรถนะสูง', price:58000, glyph:'coil', stock:true },
+    { id:'WH-01', name:'ล้อแม็กฟอร์จ 21" โมโนบล็อก (ชุด 4)', cat:'ล้อ & ยาง', fit:'ตามรุ่น (สั่งทำ)', price:180000, old:210000, glyph:'wheel', tag:'ลดราคา', stock:true },
+    { id:'WH-02', name:'ยางสมรรถนะสูง 265/35 R21', cat:'ล้อ & ยาง', fit:'ขอบ 21"', price:12500, glyph:'wheel', stock:true },
+    { id:'CB-01', name:'ชุดบอดี้คิตคาร์บอนแท้ รอบคัน', cat:'บอดี้คิต', fit:'ตามรุ่น (สั่งทำ)', price:165000, glyph:'carbon', tag:'สั่งทำ', stock:true },
+    { id:'CB-02', name:'ฝากระโปรงคาร์บอน น้ำหนักเบา', cat:'คาร์บอน', fit:'คูเป้ / ซีดานสปอร์ต', price:42000, glyph:'carbon', stock:true },
+    { id:'CB-03', name:'สปอยเลอร์คาร์บอน ปรับองศาได้', cat:'คาร์บอน', fit:'ยูนิเวอร์แซล', price:35000, glyph:'kit', stock:true },
+    { id:'IN-01', name:'เบาะคาร์บอน หุ้มหนังแนปป้า (คู่)', cat:'ภายใน', fit:'ยูนิเวอร์แซล + ขาเบาะ', price:98000, glyph:'seat', tag:'ขายดี', stock:true },
+    { id:'IN-02', name:'พวงมาลัย Alcantara เย็บมือ', cat:'ภายใน', fit:'ตามรุ่น', price:28000, glyph:'detail', stock:true },
+    { id:'IN-03', name:'ชุดตกแต่งภายในคาร์บอนแท้', cat:'ภายใน', fit:'ตามรุ่น (สั่งทำ)', price:55000, glyph:'carbon', stock:false },
+    { id:'LT-01', name:'ไฟหน้า Matrix LED เลเซอร์', cat:'ดีเทลลิ่ง', fit:'ตามรุ่น', price:68000, glyph:'light', stock:true },
+    { id:'AU-01', name:'ระบบเครื่องเสียงไฮเอนด์ ติดตั้งเต็มระบบ', cat:'ดีเทลลิ่ง', fit:'ทุกรุ่น', price:75000, glyph:'audio', stock:true },
+    { id:'DT-01', name:'เคลือบแก้วเซรามิก 9H ระดับโชว์คาร์', cat:'ดีเทลลิ่ง', fit:'ทุกคัน', price:25000, glyph:'detail', tag:'บริการ', stock:true },
+    { id:'DT-02', name:'ฟิล์มใสกันรอย PPF ทั้งคัน', cat:'ดีเทลลิ่ง', fit:'ทุกคัน', price:95000, glyph:'detail', stock:true }
+  ];
+
+  const baht = n => '฿' + n.toLocaleString('th-TH');
+  const state = { cat: 'ทั้งหมด', q: '', cart: {}, showAll: false, device: 'desktop' };
+  function detectDevice() {
+    const ua = navigator.userAgent || '';
+    const mobileUA = /Mobi|Android|iPhone|iPod|iPad|Windows Phone/i.test(ua);
+    const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    return (mobileUA || (coarse && window.innerWidth <= 820)) ? 'mobile' : 'desktop';
+  }
+
+  const catsEl = document.getElementById('cats');
+  CATS.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.textContent = c;
+    b.setAttribute('aria-pressed', c === state.cat);
+    b.onclick = () => { state.cat = c; state.showAll = false; [...catsEl.children].forEach(x => x.setAttribute('aria-pressed', x.textContent === c)); render(); };
+    catsEl.appendChild(b);
+  });
+
+  const grid = document.getElementById('grid');
+  const secHead = document.getElementById('secHead');
+  function render(animate) {
+    const q = state.q.trim().toLowerCase();
+    const full = PRODUCTS.filter(p =>
+      (state.cat === 'ทั้งหมด' || GROUP[p.cat] === state.cat) &&
+      (!q || p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q) || p.fit.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q))
+    );
+    const featured = (state.cat === 'ทั้งหมด' && !q && !state.showAll);
+    const list = featured ? full.slice(0, 8) : full;
+    document.getElementById('secTitle').textContent = state.cat === 'ทั้งหมด' ? (featured ? 'สินค้าแนะนำ' : 'สินค้าทั้งหมด') : state.cat;
+    document.getElementById('emptyFilter').hidden = full.length > 0;
+    document.getElementById('countLine').textContent = full.length ? (featured ? list.length + ' รายการคัดสรร' : full.length + ' รายการ') : '';
+    secHead.classList.toggle('is-featured', featured && full.length > 8);
+    grid.classList.toggle('feat', featured);
+    grid.innerHTML = '';
+    list.forEach(p => {
+      const card = document.createElement('div'); card.className = 'card';
+      card.innerHTML =
+        '<div class="thumb">' + thumbArt(p) +
+          (p.tag ? '<span class="tag">' + p.tag + '</span>' : '') +
+          (!p.stock ? '<span class="tag oos">ติดต่อสั่งจอง</span>' : '') +
+        '</div>' +
+        '<div class="card-body">' +
+          '<span class="cat-label">' + p.cat + '</span>' +
+          '<span class="p-name">' + p.name + '</span>' +
+          '<span class="fitment">รุ่นที่รองรับ: ' + p.fit + '</span>' +
+          '<div class="price-row">' +
+            '<span class="price tnum' + (p.old ? ' sale' : '') + '">' + baht(p.price) + '</span>' +
+            (p.old ? '<span class="old tnum">' + baht(p.old) + '</span>' : '') +
+          '</div>' +
+          (p.stock
+            ? '<button class="add" data-id="' + p.id + '">ใส่ตะกร้า</button>'
+            : '<button class="add ghost" disabled>ติดต่อสั่งจอง</button>') +
+        '</div>';
+      grid.appendChild(card);
+    });
+    grid.querySelectorAll('.add:not(.ghost)').forEach(btn => {
+      btn.onclick = () => {
+        addToCart(btn.dataset.id);
+        btn.textContent = 'เพิ่มแล้ว ✓'; btn.classList.add('added');
+        setTimeout(() => { btn.textContent = 'ใส่ตะกร้า'; btn.classList.remove('added'); }, 1100);
+      };
+    });
+  }
+  document.getElementById('q').addEventListener('input', e => { state.q = e.target.value; render(); });
+  document.getElementById('seeAll').onclick = () => { state.showAll = true; render(); };
+
+  function addToCart(id) { state.cart[id] = (state.cart[id] || 0) + 1; updateCart(); toast('เพิ่มลงตะกร้าแล้ว'); }
+  function setQty(id, d) { state.cart[id] = (state.cart[id] || 0) + d; if (state.cart[id] <= 0) delete state.cart[id]; updateCart(); }
+  function removeItem(id) { delete state.cart[id]; updateCart(); }
+
+  function updateCart() {
+    const ids = Object.keys(state.cart);
+    const totalQty = ids.reduce((s, id) => s + state.cart[id], 0);
+    const totalPrice = ids.reduce((s, id) => s + state.cart[id] * PRODUCTS.find(p => p.id === id).price, 0);
+    const cc = document.getElementById('cartCount');
+    cc.textContent = totalQty; cc.hidden = totalQty === 0;
+    document.getElementById('total').textContent = baht(totalPrice);
+    document.getElementById('checkout').disabled = totalQty === 0;
+    const box = document.getElementById('items');
+    if (!ids.length) {
+      box.innerHTML = '<div class="cart-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg><div>ยังไม่มีสินค้าในตะกร้า</div></div>';
+      return;
+    }
+    box.innerHTML = '';
+    ids.forEach(id => {
+      const p = PRODUCTS.find(x => x.id === id); const qty = state.cart[id];
+      const row = document.createElement('div'); row.className = 'line-item';
+      row.innerHTML =
+        '<div class="li-thumb">' + thumbArt(p) + '</div>' +
+        '<div class="li-main"><div class="li-name">' + p.name + '</div>' +
+          '<div class="li-sku">' + p.id + ' · ' + baht(p.price) + '</div>' +
+          '<div class="qty"><button data-m="' + id + '">−</button><span class="tnum">' + qty + '</span><button data-p="' + id + '">+</button></div></div>' +
+        '<div><div class="li-price tnum">' + baht(p.price * qty) + '</div><button class="li-remove" data-r="' + id + '">ลบ</button></div>';
+      box.appendChild(row);
+    });
+    box.querySelectorAll('[data-m]').forEach(b => b.onclick = () => setQty(b.dataset.m, -1));
+    box.querySelectorAll('[data-p]').forEach(b => b.onclick = () => setQty(b.dataset.p, 1));
+    box.querySelectorAll('[data-r]').forEach(b => b.onclick = () => removeItem(b.dataset.r));
+  }
+
+  const scrim = document.getElementById('scrim'), drawer = document.getElementById('drawer');
+  function openCart() { scrim.hidden = false; requestAnimationFrame(() => { scrim.classList.add('show'); drawer.classList.add('show'); }); }
+  function closeCart() { scrim.classList.remove('show'); drawer.classList.remove('show'); setTimeout(() => scrim.hidden = true, 240); }
+  document.getElementById('cartBtn').onclick = openCart;
+  document.getElementById('closeCart').onclick = closeCart;
+  scrim.onclick = closeCart;
+
+  document.getElementById('checkout').onclick = () => {
+    const ids = Object.keys(state.cart);
+    let txt = 'สั่งซื้อจาก Prestige Auto\n----------------\n'; let total = 0;
+    ids.forEach(id => { const p = PRODUCTS.find(x => x.id === id); const q = state.cart[id];
+      txt += p.name + ' (' + p.id + ') x' + q + ' = ' + baht(p.price * q) + '\n'; total += p.price * q; });
+    txt += '----------------\nยอดรวม ' + baht(total);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(() => toast('คัดลอกรายการแล้ว นำไปวางในแชท LINE ได้เลย'))
+        .catch(() => toast('คัดลอกไม่สำเร็จ ลองใหม่อีกครั้ง'));
+    } else toast('อุปกรณ์นี้คัดลอกอัตโนมัติไม่ได้');
+  };
+
+  document.getElementById('themeBtn').onclick = () => {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const dark = cur ? cur === 'dark' : !matchMedia('(prefers-color-scheme: light)').matches;
+    document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+  };
+
+  let tTimer; const toastEl = document.getElementById('toast');
+  function toast(msg) { toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(tTimer); tTimer = setTimeout(() => toastEl.classList.remove('show'), 1800); }
+
+  // ---------- คัดลอกช่องทางติดต่อ + กลับขึ้นบน ----------
+  document.querySelectorAll('[data-copy]').forEach(el => {
+    el.addEventListener('click', () => {
+      const t = el.textContent.trim();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(t).then(() => toast('คัดลอกแล้ว: ' + t)).catch(() => toast('คัดลอกไม่สำเร็จ'));
+      } else toast('อุปกรณ์นี้คัดลอกอัตโนมัติไม่ได้');
+    });
+  });
+  document.getElementById('toTop').onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // ---------- Feed ----------
+  const VIDEOS = [
+    { cap: 'ซูเปอร์คาร์ฟูลสเปก', tag: '#ไฮคลาส #ซูเปอร์คาร์', q: 'ซูเปอร์คาร์ แต่ง', g1:'#241f14', g2:'#0c0b0a' },
+    { cap: 'ท่อไทเทเนียม เสียงพรีเมียม', tag: '#ท่อไทเทเนียม', q: 'ท่อไทเทเนียม', g1:'#2a2314', g2:'#0c0b0a' },
+    { cap: 'ล้อฟอร์จ งานสั่งทำ', tag: '#ล้อฟอร์จ', q: 'ล้อฟอร์จ', g1:'#201c15', g2:'#0c0b0a' },
+    { cap: 'บอดี้คิตคาร์บอนแท้', tag: '#คาร์บอน #บอดี้คิต', q: 'บอดี้คิต คาร์บอน', g1:'#26200f', g2:'#0c0b0a' }
+  ];
+  document.getElementById('feedGrid').innerHTML = VIDEOS.map(v =>
+    '<a class="vcard" href="https://www.tiktok.com/search?q=' + encodeURIComponent(v.q) + '" target="_blank" rel="noopener">' +
+      '<div class="vthumb">' +
+        '<svg class="cover" viewBox="0 0 90 160" preserveAspectRatio="xMidYMid slice">' +
+          '<defs><linearGradient id="vg' + v.q.length + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + v.g1 + '"/><stop offset="1" stop-color="' + v.g2 + '"/></linearGradient></defs>' +
+          '<rect width="90" height="160" fill="url(#vg' + v.q.length + ')"/>' +
+          '<path d="M-5 120 Q45 90 95 120" fill="none" stroke="#c9a24b" stroke-width="1.5" opacity=".5"/>' +
+          '<path d="M-5 135 Q45 108 95 135" fill="none" stroke="#e7cd8c" stroke-width="1" opacity=".3"/>' +
+        '</svg>' +
+        '<span class="vchip">ตัวอย่าง</span>' +
+        '<span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>' +
+      '</div>' +
+      '<div class="vbody"><div class="vcap">' + v.cap + '</div><div class="vtag">' + v.tag + '</div></div>' +
+    '</a>'
+  ).join('');
+
+  // ---------- Hero slider ----------
+  const SLIDES = [
+    { eyebrow:'Prestige Collection', title:'งานแต่งระดับ<em>ไฮคลาส</em><br>สำหรับคนที่ไม่ประนีประนอม', text:'คัดอะไหล่และของแต่งคุณภาพสูงสุดสำหรับรถหรูและซูเปอร์คาร์ ของแท้ มีใบรับประกัน พร้อมทีมที่ปรึกษาส่วนตัว', cta:'ชมสินค้าแนะนำ', act:'top', g:'radial-gradient(130% 150% at 85% 10%, rgba(201,162,75,.22), transparent 55%)' },
+    { eyebrow:'Performance', title:'เทอร์โบ · ท่อไทเทเนียม<br><em>พลังที่ควบคุมได้</em>', text:'ชุดอัพเกรดสมรรถนะพร้อมจูนเฉพาะคันโดยผู้เชี่ยวชาญ รีดศักยภาพเครื่องยนต์อย่างปลอดภัย', cta:'ดูหมวดเครื่องยนต์', act:'cat', g:'radial-gradient(130% 150% at 15% 20%, rgba(231,205,140,.18), transparent 55%)' },
+    { eyebrow:'Forged & Carbon', title:'ล้อฟอร์จ · คาร์บอนแท้<br><em>งานสั่งทำเฉพาะคัน</em>', text:'ล้อโมโนบล็อกและชุดบอดี้คิตคาร์บอน ออกแบบและผลิตตามสเปกของคุณ ลดน้ำหนัก เพิ่มความงาม', cta:'ดูคอลเลกชัน', act:'top', g:'radial-gradient(130% 150% at 80% 80%, rgba(201,162,75,.2), transparent 55%)' }
+  ];
+  const slidesEl = document.getElementById('slides');
+  const dotsEl = document.getElementById('heroDots');
+  const sliderEl = document.getElementById('heroSlider');
+  const bar = document.getElementById('heroBar');
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const DURATION = 6000;
+  let slideIdx = 0, slideStart = 0, rafId = null, paused = false, pauseStart = 0;
+  const texture = 'repeating-linear-gradient(135deg, rgba(201,162,75,.04) 0 1px, transparent 1px 10px)';
+
+  function buildSlides() {
+    slidesEl.innerHTML = SLIDES.map(s =>
+      '<div class="slide">' +
+        '<div class="bgfx" style="background:' + s.g + ',' + texture + '"></div>' +
+        '<div class="hero-copy">' +
+          '<span class="eyebrow">' + s.eyebrow + '</span>' +
+          '<h1>' + s.title + '</h1>' +
+          '<p>' + s.text + '</p>' +
+          '<button class="hero-cta" data-act="' + s.act + '">' + s.cta + '</button>' +
+        '</div>' +
+      '</div>'
+    ).join('');
+    dotsEl.innerHTML = SLIDES.map((s, i) => '<button data-i="' + i + '" aria-label="สไลด์ ' + (i + 1) + '"></button>').join('');
+    slidesEl.querySelectorAll('.hero-cta').forEach(b => b.onclick = () => heroAct(b.dataset.act));
+    dotsEl.querySelectorAll('button').forEach(b => b.onclick = () => goSlide(+b.dataset.i));
+    goSlide(0);
+  }
+  function goSlide(i) {
+    slideIdx = (i + SLIDES.length) % SLIDES.length;
+    slidesEl.style.transform = 'translateX(' + (-slideIdx * 100) + '%)';
+    [...dotsEl.children].forEach((d, k) => d.setAttribute('aria-current', k === slideIdx));
+    slideStart = performance.now();
+    if (bar) bar.style.width = '0%';
+    if (!reduceMotion && !paused && rafId == null) rafId = requestAnimationFrame(frame);
+  }
+  function frame() {
+    rafId = null;
+    if (paused || reduceMotion) return;
+    const elapsed = performance.now() - slideStart;
+    if (elapsed >= DURATION) { goSlide(slideIdx + 1); return; }
+    if (bar) bar.style.width = (elapsed / DURATION * 100) + '%';
+    rafId = requestAnimationFrame(frame);
+  }
+  function heroAct(act) {
+    if (act === 'cat') {
+      const c = 'เครื่องยนต์ & อัพเกรด';
+      state.cat = c; state.showAll = false;
+      [...catsEl.children].forEach(x => x.setAttribute('aria-pressed', x.textContent === c));
+      render();
+    }
+    document.querySelector('main').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  document.getElementById('heroPrev').onclick = () => goSlide(slideIdx - 1);
+  document.getElementById('heroNext').onclick = () => goSlide(slideIdx + 1);
+  sliderEl.addEventListener('mouseenter', () => { if (paused) return; paused = true; pauseStart = performance.now(); if (rafId) { cancelAnimationFrame(rafId); rafId = null; } });
+  sliderEl.addEventListener('mouseleave', () => { if (!paused) return; paused = false; slideStart += performance.now() - pauseStart; if (rafId == null) rafId = requestAnimationFrame(frame); });
+  buildSlides();
+
+  // ---------- device ----------
+  function applyDevice() {
+    const d = detectDevice();
+    if (d !== state.device || !document.documentElement.getAttribute('data-device')) {
+      state.device = d;
+      document.documentElement.setAttribute('data-device', d);
+      render();
+    }
+  }
+  applyDevice();
+  window.addEventListener('resize', applyDevice);
+
+  render(); updateCart();
+</script>
