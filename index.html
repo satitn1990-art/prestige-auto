@@ -322,6 +322,13 @@
 
   footer.site { background: var(--carbon); color: #cfc8ba; border-top: 1px solid var(--accent); margin-top: 20px; }
   .foot-kw { font-size: 12px; color: var(--muted); line-height: 1.7; margin-top: 10px; }
+  .promise { max-width: 1200px; margin: 28px auto 0; padding: 0 max(16px, env(safe-area-inset-left,0px)); }
+  .promise-in { border: 1px solid var(--line); background: var(--surface); border-radius: 2px; padding: 18px 22px; text-align: center; }
+  .promise-lead { margin: 0 0 12px; color: var(--fg); font-size: 15px; line-height: 1.6; }
+  .promise-lead b { color: var(--accent-2); }
+  .promise-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 26px; }
+  .promise-list li { font-family: var(--font-body); font-size: 12.5px; letter-spacing: .5px; color: var(--muted); text-transform: uppercase; }
+  .promise-list li::before { content: "\2726"; color: var(--accent); margin-right: 8px; }
   .foot-grid {
     max-width: 1200px; margin: 0 auto; padding-block: 38px;
     padding-left: max(16px, env(safe-area-inset-left, 0px));
@@ -386,6 +393,18 @@
     <button class="hero-nav next" id="heroNext" aria-label="สไลด์ถัดไป">›</button>
     <div class="hero-dots" id="heroDots"></div>
     <div class="hero-progress"><span id="heroBar"></span></div>
+  </div>
+</section>
+
+<section class="promise" aria-label="บริการของเรา">
+  <div class="promise-in">
+    <p class="promise-lead">บริการดี ปรึกษาและติดต่อได้ <b>24 ชม.</b> ด้วยทีมมืออาชีพ รวดเร็วทันใจ ถูกใจแน่นอน</p>
+    <ul class="promise-list">
+      <li>ปรึกษา/ติดต่อ 24 ชม.</li>
+      <li>ทีมงานมืออาชีพ</li>
+      <li>บริการรวดเร็วทันใจ</li>
+      <li>ของแท้ มีใบรับประกัน</li>
+    </ul>
   </div>
 </section>
 
@@ -773,3 +792,5 @@
 
   render(); updateCart();
 </script>
+
+<!-- rev 2026-11-12 -->
