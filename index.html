@@ -701,7 +701,7 @@
     slidesEl.innerHTML = SLIDES.map(s =>
       s.img
       ? '<div class="slide slide-promo" data-act="' + (s.act || 'top') + '">' +
-          '<div class="bgfx" style="background-image:url(\'' + s.img + '\');background-size:cover;background-position:center;pointer-events:none"></div>' +
+          '<div class="bgfx" style="background-image:url(\'' + s.img + '\');background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#0c0b0a;pointer-events:none"></div>' +
         '</div>'
       : '<div class="slide">' +
         '<div class="bgfx" style="background:' + s.g + ',' + texture + '"></div>' +
